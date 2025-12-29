@@ -1,12 +1,12 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: headlamp
-  namespace: headlamp
+  name: argocd
+  namespace: argocd
 spec:
   type: LoadBalancer
   ports:
     - port: 8082
       targetPort: 443
   selector:
-    k8s-app: headlamp
+    k8s-app: argocd
