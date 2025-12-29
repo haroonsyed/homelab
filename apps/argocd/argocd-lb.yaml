@@ -1,7 +1,7 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: argocd
+  name: argocd-lb
   namespace: argocd
 spec:
   type: LoadBalancer
