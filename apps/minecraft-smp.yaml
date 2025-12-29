@@ -35,25 +35,10 @@ spec:
         - containerPort: 25565
           name: mc-port
           protocol: TCP
+          hostPort: 25565
+          hostIP: 0.0.0.0
         - containerPort: 24454
           name: voice-port
           protocol: UDP
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: mc-server-service
-  namespace: mc-server
-spec:
-  type: LoadBalancer 
-  selector:
-    app: mc-server 
-  ports:
-    - name: minecraft
-      protocol: TCP
-      port: 25565
-      targetPort: 25565
-    - name: voice
-      protocol: UDP
-      port: 24454
-      targetPort: 24454
+          hostPort: 24454
+          hostIP: 0.0.0.0
