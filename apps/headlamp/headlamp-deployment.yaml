@@ -4,6 +4,7 @@ metadata:
   name: headlamp
   namespace: headlamp
 spec:
+  type: LoadBalancer
   ports:
     - port: 8080
       targetPort: 4466
