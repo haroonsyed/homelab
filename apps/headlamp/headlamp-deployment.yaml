@@ -5,7 +5,7 @@ metadata:
   namespace: headlamp
 spec:
   ports:
-    - port: 80
+    - port: 8080
       targetPort: 4466
   selector:
     k8s-app: headlamp
