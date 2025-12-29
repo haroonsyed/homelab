@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: headlamp
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'https://kubernetes-sigs.github.io/headlamp/'
+    chart: headlamp
+    targetRevision: 0.39.0
+    helm:
+      parameters:
+        - name: service.port
+          value: "8082"
+        - name: serviceAccount.create
+          value: "true"
+        - name: serviceAccount.name
+          value: "headlamp-admin"
+    destination:
+      server: 'https://kubernetes.default.svc'
+      namespace: headlamp
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
