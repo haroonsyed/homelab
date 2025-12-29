@@ -9,4 +9,4 @@ spec:
     - port: 8082
       targetPort: 443
   selector:
-    k8s-app: argocd
+    app: argocd-server

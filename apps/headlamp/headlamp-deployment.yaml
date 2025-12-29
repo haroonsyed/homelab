@@ -9,7 +9,7 @@ spec:
     - port: 8080
       targetPort: 4466
   selector:
-    k8s-app: headlamp
+    app: headlamp
 ---
 kind: Deployment
 apiVersion: apps/v1
