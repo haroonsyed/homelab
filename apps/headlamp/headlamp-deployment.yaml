@@ -44,6 +44,8 @@ spec:
               value: "headlamp"
             - name: HEADLAMP_CONFIG_SERVICE_VERSION
               value: "latest"
+            - name: HEADLAMP_SERVER_IN_CLUSTER
+              value: "true"
           ports:
             - containerPort: 4466
               name: http
