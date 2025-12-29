@@ -9,7 +9,7 @@ spec:
     - port: 8080
       targetPort: 4466
   selector:
-    app.kubernetes.io/name: headlamp
+    k8s-app: headlamp
 ---
 kind: Deployment
 apiVersion: apps/v1
