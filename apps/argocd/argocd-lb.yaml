@@ -7,6 +7,6 @@ spec:
   type: LoadBalancer
   ports:
     - port: 8082
-      targetPort: 443
+      targetPort: 8081
   selector:
     app: argocd-server
