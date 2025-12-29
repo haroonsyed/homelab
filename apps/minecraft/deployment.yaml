@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mc-server-test
+  namespace: mc-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mc-server
+  template:
+    metadata:
+      labels:
+        app: mc-server
+    spec:
+      containers:
+      - name: minecraft
+        image: docker.io/library/mc-server-manager:latest
+        imagePullPolicy: Never
+        resources:
+          requests:
+            memory: "12Gi"
+            cpu: "2"
+          limits:
+            memory: "14Gi"
+        envFrom:
+        - secretRef:
+            name: mc-server-config
+        ports:
+        - containerPort: 25565
+          name: mc-port
+          protocol: TCP
+        - containerPort: 24454
+          name: voice-port
+          protocol: UDP
