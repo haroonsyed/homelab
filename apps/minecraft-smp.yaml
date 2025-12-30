@@ -42,3 +42,6 @@ spec:
           protocol: UDP
           hostPort: 24454
           hostIP: 0.0.0.0
+        # securityContext:
+        #   runAsNonRoot: true
+        #   allowPrivilegeEscalation: false
