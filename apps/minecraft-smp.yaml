@@ -3,6 +3,23 @@ kind: Namespace
 metadata:
   name: mc-server
 ---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mc-service
+  namespace: mc-server
+spec:
+  type: LoadBalancer
+  selector:
+    app: mc-server
+  ports:
+    - protocol: TCP
+      port: 25565
+      targetPort: 25565
+    - protocol: UDP
+      port: 24454
+      targetPort: 24454
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -18,6 +35,10 @@ spec:
       labels:
         app: mc-server
     spec:
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
       containers:
       - name: minecraft
         image: docker.io/library/mc-server-manager:latest
@@ -31,17 +52,8 @@ spec:
         envFrom:
         - secretRef:
             name: mc-server-config
-        ports:
-        - containerPort: 25565
-          name: mc-port
-          protocol: TCP
-          hostPort: 25565
-          hostIP: 0.0.0.0
-        - containerPort: 24454
-          name: voice-port
-          protocol: UDP
-          hostPort: 24454
-          hostIP: 0.0.0.0
         securityContext:
-          runAsNonRoot: true
           allowPrivilegeEscalation: false
+          capabilities:
+              drop:
+                - ALL
