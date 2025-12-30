@@ -22,6 +22,58 @@ spec:
       port: 24454
       targetPort: 24454
 ---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-all
+  namespace: mc-server
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - podSelector: {}
+  egress:
+  - to:
+    - podSelector: {}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow
+  namespace: mc-server
+spec:
+  podSelector: 
+    matchLabels:
+      app: mc-server
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - protocol: TCP
+      ports:
+      - port: 25565 # Minecraft
+    - protocol: UDP
+      ports:
+      - port: 24454 # Voice chat
+  egress:
+  - to:
+    - namespaceSelector: 
+        matchLabels:
+          name: kube-system
+      ports:
+      - protocol: UDP 
+        port: 53 # DNS
+  - to:
+    ports:
+    - protocol: TCP
+      port: 443 # For auth servers, look into using mesh network to restrict this more later
+    - protocol: UDP
+      port: 24454 # Voice chat
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -49,10 +101,11 @@ spec:
         imagePullPolicy: Never
         resources:
           requests:
-            memory: "12Gi"
+            memory: "4Gi"
             cpu: "2"
           limits:
-            memory: "14Gi"
+            cpu: "8"
+            memory: "12Gi"
         envFrom:
         - secretRef:
             name: mc-server-config
@@ -80,3 +133,4 @@ spec:
   resources:
     requests:
       storage: 30Gi
+# TO BE AWARE OF. The above is not fault tolerant, for that I would need to look into LongHorn for replicated storage (A NAS drive would have high latency for a game).

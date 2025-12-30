@@ -55,6 +55,13 @@ spec:
               port: 4466
             initialDelaySeconds: 30
             timeoutSeconds: 30
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
@@ -90,3 +97,44 @@ subjects:
 - kind: ServiceAccount
   name: headlamp-admin
   namespace: headlamp
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-all
+  namespace: headlamp
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - podSelector: {}
+  egress:
+  - to:
+    - podSelector: {}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow
+  namespace: headlamp
+spec:
+  podSelector: 
+    matchLabels:
+      k8s-app: headlamp
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - namespaceSelector: 
+        matchLabels:
+          name: kube-system
+      ports:
+      - protocol: UDP
+        port: 53
+  - to:
+    ports:
+    - protocol: TCP
+      port: 6443
