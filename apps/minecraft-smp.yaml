@@ -13,10 +13,12 @@ spec:
   selector:
     app: mc-server
   ports:
-    - protocol: TCP
+    - name: game
+      protocol: TCP
       port: 25565
       targetPort: 25565
-    - protocol: UDP
+    - name: voice-chat
+      protocol: UDP
       port: 24454
       targetPort: 24454
 ---
