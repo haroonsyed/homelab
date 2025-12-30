@@ -6,9 +6,9 @@ Things to remember to do for creating the cluster correctly:
       "--disable traefik"
       "--secrets-encryption"
       "--kube-apiserver-arg=admission-control-config-file=/etc/rancher/k3s/server/psa.yaml"
-      "--kubelet-arg=pod-max-pids=100"
+      "--kubelet-arg=pod-max-pids=2048"
       "--kube-apiserver-arg=enable-admission-plugins=NodeRestriction"
-      "--kubelet-arg=tls-cipher-suites=TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305"
+      #"--kubelet-arg=tls-cipher-suites=TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305"
 3. Create a PSA (See https://docs.k3s.io/security/hardening-guide for security guidance)
 ```
     apiVersion: apiserver.config.k8s.io/v1
@@ -28,6 +28,9 @@ Things to remember to do for creating the cluster correctly:
           runtimeClasses: []
           namespaces: [kube-system, argocd]
 ```
+4. For MC make sure these env are set:
+- LOCAL_BACKUP_DIR: /mc-storage/server
+- LOCAL_SERVER_DIR: /mc-storage/backups
 
 
 To monitor:

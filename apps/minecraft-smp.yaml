@@ -40,6 +40,7 @@ spec:
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
+        fsGroup: 1000
         seccompProfile:
           type: RuntimeDefault
       containers:
@@ -60,3 +61,22 @@ spec:
           capabilities:
               drop:
                 - ALL
+        volumeMounts:
+        - name: mc-storage
+          mountPath: /mc-storage
+      volumes:
+      - name: mc-storage
+        persistentVolumeClaim:
+          claimName: mc-storage-pvc
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mc-storage-pvc
+  namespace: mc-server
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 30Gi
