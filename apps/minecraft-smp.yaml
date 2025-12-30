@@ -68,6 +68,8 @@ spec:
       - protocol: UDP 
         port: 53 # DNS
   - to:
+    - ipBlock:
+        cidr: 0.0.0.0/0
     ports:
     - protocol: TCP
       port: 443 # For auth servers, look into using mesh network to restrict this more later

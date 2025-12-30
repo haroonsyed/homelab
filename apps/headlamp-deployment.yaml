@@ -135,6 +135,9 @@ spec:
       - protocol: UDP
         port: 53
   - to:
+    - namespaceSelector: 
+        matchLabels:
+          name: kube-system
     ports:
     - protocol: TCP
       port: 6443
