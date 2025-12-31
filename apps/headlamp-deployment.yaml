@@ -26,9 +26,13 @@ spec:
             securityContext:
               allowPrivilegeEscalation: false
               runAsNonRoot: true
+              readOnlyRootFilesystem: true
               runAsUser: 1000
+              seccompProfile:
+                type: RuntimeDefault
               capabilities:
-                drop: ["ALL"]
+                drop:
+                  - ALL
 
         volumeMounts:
           - name: headlamp-plugins
@@ -40,15 +44,15 @@ spec:
 
         securityContext:
           runAsNonRoot: true
-          runAsUser: 1000
-          fsGroup: 1000
-        
-        containerSecurityContext:
+          priviledged: false
           allowPrivilegeEscalation: false
+          runAsUser: 1000
+          runAsGroup: 1000
           seccompProfile:
             type: RuntimeDefault
-          capabilities:
-            drop: ["ALL"]
+        
+        podSecurityContext:
+          fsGroup: 1000
 
   destination:
     server: https://kubernetes.default.svc
