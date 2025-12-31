@@ -11,20 +11,6 @@ spec:
     targetRevision: 0.14.1
     helm:
       values: |
-        containerSecurityContext:
-          runAsNonRoot: true
-          runAsUser: 1000
-          allowPrivilegeEscalation: false
-          capabilities:
-            drop:
-              - ALL
-          seccompProfile:
-            type: RuntimeDefault
-        agent:
-          acquisition:
-            - namespace: mc-server
-              podName: mc-server-*
-              program: minecraft
         lapi:
           containerSecurityContext:
             runAsNonRoot: true
@@ -34,6 +20,11 @@ spec:
               drop: ["ALL"]
             seccompProfile:
               type: RuntimeDefault
+        agent:
+          acquisition:
+            - namespace: mc-server
+              podName: mc-server-*
+              program: minecraft
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: crowdsec
