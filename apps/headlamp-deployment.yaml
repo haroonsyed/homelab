@@ -139,7 +139,7 @@ spec:
   - to:
     - namespaceSelector: 
         matchLabels:
-          kubernetes.io/metadata.name: kube-system
+          kubernetes.io/metadata.name: default
     ports:
     - protocol: TCP
-      port: 443
+      port: 6443
