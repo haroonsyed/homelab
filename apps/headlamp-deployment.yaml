@@ -53,6 +53,13 @@ spec:
         
         podSecurityContext:
           fsGroup: 1000
+          runAsNonRoot: true
+          priviledged: false
+          allowPrivilegeEscalation: false
+          runAsUser: 1000
+          runAsGroup: 1000
+          seccompProfile:
+            type: RuntimeDefault
 
   destination:
     server: https://kubernetes.default.svc
