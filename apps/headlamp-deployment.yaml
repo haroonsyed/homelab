@@ -131,9 +131,9 @@ spec:
     - namespaceSelector: 
         matchLabels:
           name: kube-system
-      ports:
-      - protocol: UDP
-        port: 53
+    ports:
+    - protocol: UDP
+      port: 53
   - to:
     - namespaceSelector: 
         matchLabels:

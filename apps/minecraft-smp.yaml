@@ -64,9 +64,9 @@ spec:
     - namespaceSelector: 
         matchLabels:
           name: kube-system
-      ports:
-      - protocol: UDP 
-        port: 53 # DNS
+    ports:
+    - protocol: UDP 
+      port: 53 # DNS
   - to:
     - ipBlock:
         cidr: 0.0.0.0/0
