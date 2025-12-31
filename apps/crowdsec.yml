@@ -1,0 +1,27 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: crowdsec
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'https://crowdsecurity.github.io/helm-charts'
+    chart: crowdsec
+    targetRevision: 0.14.1
+    helm:
+      values: |
+        containerSecurityContext:
+          privileged: true # Required to read logs from the host
+        agent:
+          acquisition:
+            - namespace: mc-server
+              podName: mc-server-*
+              program: minecraft
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: crowdsec
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
