@@ -25,6 +25,15 @@ spec:
             - namespace: mc-server
               podName: mc-server-*
               program: minecraft
+        lapi:
+          containerSecurityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+            seccompProfile:
+              type: RuntimeDefault
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: crowdsec
