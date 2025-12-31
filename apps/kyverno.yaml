@@ -21,19 +21,6 @@ spec:
         values: |
           podSecurityStandard: restricted
           validationFailureAction: Audit
-
-    - repoURL: https://kyverno.github.io/policy-reporter
-      chart: policy-reporter
-      targetRevision: 3.7.0
-      helm:
-        values: |
-          ui:
-            enabled: true
-          api:
-            enabled: true
-          policyReporter:
-            enabled: true
-  
   destination:
     server: https://kubernetes.default.svc
     namespace: kyverno
