@@ -39,6 +39,8 @@ apiVersion: kyverno.io/v1
 kind: ClusterPolicy
 metadata:
   name: add-secure-defaults-to-pods
+  annotations:
+    pod-policies.kyverno.io/autogen-controllers: none
 spec:
   rules:
   - name: add-security-context
