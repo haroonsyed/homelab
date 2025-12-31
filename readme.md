@@ -28,7 +28,7 @@ Things to remember to do for creating the cluster correctly:
         exemptions:
           usernames: []
           runtimeClasses: []
-          namespaces: [kube-system, argocd]
+          namespaces: [kube-system, argocd, kyverno]
 ```
 4. For MC make sure these env are set:
 - LOCAL_BACKUP_DIR: /mc-storage/server

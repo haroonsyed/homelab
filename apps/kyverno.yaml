@@ -20,7 +20,12 @@ spec:
       helm:
         values: |
           podSecurityStandard: restricted
-          validationFailureAction: Audit
+          validationFailureAction: Enforce
+          excludeNamespaces:
+            - kube-system
+            - kyverno
+            - argocd
+
   destination:
     server: https://kubernetes.default.svc
     namespace: kyverno
