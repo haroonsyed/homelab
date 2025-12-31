@@ -29,6 +29,10 @@ spec:
         values: |
           ui:
             enabled: true
+          api:
+            enabled: true
+          policyReporter:
+            enabled: true
   
   destination:
     server: https://kubernetes.default.svc
