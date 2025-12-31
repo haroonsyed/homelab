@@ -138,9 +138,7 @@ spec:
       port: 53
   - to:
     - ipBlock:
-        cidr: 0.0.0.0/0
+        cidr: 0.0.0.0/0 # Todo: Rectrict to just kubernetes API server
     ports:
     - protocol: TCP
       port: 6443
-    - protocol: TCP
-      port: 443

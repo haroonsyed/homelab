@@ -9,15 +9,15 @@ spec:
   policyTypes:
   - Ingress
   - Egress
-  ingress:
-  - from:
-    - namespaceSelector:
-        matchExpressions:
-        - key: kubernetes.io/metadata.name
-          operator: In
-          values:
-          values: ["argocd", "kube-system", "monitoring", "headlamp"]
-    ports:
-    - protocol: TCP
-      port: 443
+  # ingress:
+  # - from:
+  #   - namespaceSelector:
+  #       matchExpressions:
+  #       - key: kubernetes.io/metadata.name
+  #         operator: In
+  #         values:
+  #         values: ["argocd", "kube-system", "monitoring", "headlamp"]
+  #   ports:
+  #   - protocol: TCP
+  #     port: 443
 ---
