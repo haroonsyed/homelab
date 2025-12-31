@@ -11,13 +11,16 @@ spec:
     targetRevision: 0.14.1
     helm:
       values: |
+        # Global security settings for all CrowdSec components
         containerSecurityContext:
-          privileged: true # Required to read logs from the host
-        agent:
-          acquisition:
-            - namespace: mc-server
-              podName: mc-server-*
-              program: minecraft
+          runAsNonRoot: true
+          runAsUser: 1000
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
+          seccompProfile:
+            type: RuntimeDefault
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: crowdsec
