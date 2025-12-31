@@ -12,11 +12,12 @@ spec:
     helm:
       values: |
         grafana:
-          containerSecurityContext:
-            allowPrivilegeEscalation: false
+          securityContext:
             runAsNonRoot: true
             runAsUser: 1000
             fsGroup: 1000
+          containerSecurityContext:
+            allowPrivilegeEscalation: false
             capabilities:
               drop: ["ALL"]
             seccompProfile:
@@ -27,7 +28,6 @@ spec:
             passwordKey: "admin-password"
         prometheus:
           securityContext:
-            allowPrivilegeEscalation: false
             runAsNonRoot: true
             runAsUser: 1000
             fsGroup: 1000
