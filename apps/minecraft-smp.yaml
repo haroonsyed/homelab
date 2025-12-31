@@ -114,6 +114,9 @@ spec:
             name: mc-server-config
         securityContext:
           allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          seccompProfile:
+            type: RuntimeDefault
           capabilities:
               drop:
                 - ALL
