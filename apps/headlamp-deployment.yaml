@@ -143,3 +143,5 @@ spec:
     ports:
     - protocol: TCP
       port: 6443
+    - protocol: UDP
+      port: 443
