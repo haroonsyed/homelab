@@ -137,9 +137,8 @@ spec:
     - protocol: TCP
       port: 53
   - to:
-    - namespaceSelector: 
-        matchLabels:
-          kubernetes.io/metadata.name: default
+    - ipBlock:
+        cidr: 0.0.0.0/0
     ports:
     - protocol: TCP
       port: 6443
