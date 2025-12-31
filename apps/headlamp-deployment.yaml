@@ -50,6 +50,9 @@ spec:
           runAsGroup: 1000
           seccompProfile:
             type: RuntimeDefault
+          capabilities:
+            drop:
+              - ALL
         
         podSecurityContext:
           fsGroup: 1000
@@ -60,6 +63,9 @@ spec:
           runAsGroup: 1000
           seccompProfile:
             type: RuntimeDefault
+          capabilities:
+              drop:
+                - ALL
 
   destination:
     server: https://kubernetes.default.svc
