@@ -53,12 +53,13 @@ spec:
   - Egress
   ingress:
   - from:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+    ports:
     - protocol: TCP
-      ports:
-      - port: 25565 # Minecraft
+      port: 25565 # Minecraft
     - protocol: UDP
-      ports:
-      - port: 24454 # Voice chat
+      port: 24454 # Voice chat
   egress:
   - to:
     - namespaceSelector: 
