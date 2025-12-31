@@ -1,0 +1,92 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kyverno-stack
+  namespace: argocd
+spec:
+  project: default
+  sources:
+    - repoURL: https://kyverno.github.io/kyverno/
+      chart: kyverno
+      targetRevision: 3.6.1
+      helm:
+        values: |
+          admissionController:
+            replicas: 1
+
+    - repoURL: https://kyverno.github.io/kyverno/
+      chart: kyverno-policies
+      targetRevision: 2.1.0
+      helm:
+        values: |
+          podSecurityStandard: restricted
+          validationFailureAction: Audit
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kyverno
+    
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
+---
+# Mutation policy to add secure defaults to all pods
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: add-secure-defaults-to-pods
+spec:
+  rules:
+  - name: add-security-context
+    match:
+      resources:
+        kinds:
+        - Pod
+    exclude:
+      resources:
+        namespaces:
+        - kube-system
+        - kyverno
+        - argocd
+    mutate:
+      patchStrategicMerge:
+        spec:
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+            fsGroup: 1000
+            seccompProfile:
+              type: RuntimeDefault
+          containers:
+          - name: "*"
+            securityContext:
+              allowPrivilegeEscalation: false
+              seccompProfile:
+                type: RuntimeDefault
+              capabilities:
+                drop:
+                  - ALL
+# TODO: Add network, resource policies. Exceptions for some namespaces
+---
+# Test by adding nginx without any sec stuff
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: insecure-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: insecure-app
+  template:
+    metadata:
+      labels:
+        app: insecure-app
+    spec:
+      containers:
+        - name: app
+          image: nginx

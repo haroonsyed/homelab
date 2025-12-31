@@ -66,6 +66,8 @@ spec:
           capabilities:
               drop:
                 - ALL
+        config:
+          watchPlugins: true
 
   destination:
     server: https://kubernetes.default.svc
