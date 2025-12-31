@@ -1,144 +1,61 @@
-kind: Deployment
-apiVersion: apps/v1
+apiVersion: argoproj.io/v1alpha1
+kind: Application
 metadata:
   name: headlamp
-  namespace: headlamp
+  namespace: argocd
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      k8s-app: headlamp
-  template:
-    metadata:
-      labels:
-        k8s-app: headlamp
-    spec:
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 1000
-        seccompProfile:
-          type: RuntimeDefault
-      serviceAccountName: headlamp-admin
-      containers:
-        - name: headlamp
-          image: ghcr.io/headlamp-k8s/headlamp:latest
-          args:
-            - "-in-cluster"
-            - "-plugins-dir=/headlamp/plugins"
-          env:
-            - name: HEADLAMP_CONFIG_TRACING_ENABLED
-              value: "true"
-            - name: HEADLAMP_CONFIG_METRICS_ENABLED
-              value: "true"
-            - name: HEADLAMP_CONFIG_OTLP_ENDPOINT
-              value: "otel-collector:4317"
-            - name: HEADLAMP_CONFIG_SERVICE_NAME
-              value: "headlamp"
-            - name: HEADLAMP_CONFIG_SERVICE_VERSION
-              value: "latest"
-          ports:
-            - containerPort: 4466
-              name: http
-            - containerPort: 9090
-              name: metrics
-          readinessProbe:
-            httpGet:
-              scheme: HTTP
-              path: /
-              port: 4466
-            initialDelaySeconds: 30
-            timeoutSeconds: 30
-          livenessProbe:
-            httpGet:
-              scheme: HTTP
-              path: /
-              port: 4466
-            initialDelaySeconds: 30
-            timeoutSeconds: 30
-          resources:
-            requests:
-              memory: "256Mi"
-              cpu: "250m"
-            limits:
-              memory: "512Mi"
-              cpu: "500m"
-          securityContext:
-            allowPrivilegeEscalation: false
-            capabilities:
-              drop:
-                - ALL
-      nodeSelector:
-        'kubernetes.io/os': linux
----
-kind: Secret
-apiVersion: v1
-metadata:
-  name: headlamp-admin
-  namespace: headlamp
-  annotations:
-    kubernetes.io/service-account.name: "headlamp-admin"
-type: kubernetes.io/service-account-token
----
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: headlamp-admin
-  namespace: headlamp
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: headlamp-admin-binding
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: cluster-admin
-subjects:
-- kind: ServiceAccount
-  name: headlamp-admin
-  namespace: headlamp
----
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: default-deny-all
-  namespace: headlamp
-spec:
-  podSelector: {}
-  policyTypes:
-  - Ingress
-  - Egress
-  ingress:
-  - from:
-    - podSelector: {}
-  egress:
-  - to:
-    - podSelector: {}
----
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: allow
-  namespace: headlamp
-spec:
-  podSelector: 
-    matchLabels:
-      k8s-app: headlamp
-  policyTypes:
-  - Egress
-  egress:
-  - to:
-    - namespaceSelector: 
-        matchLabels:
-          kubernetes.io/metadata.name: kube-system
-    ports:
-    - protocol: UDP
-      port: 53
-    - protocol: TCP
-      port: 53
-  - to:
-    - ipBlock:
-        cidr: 0.0.0.0/0 # Todo: Rectrict to just kubernetes API server
-    ports:
-    - protocol: TCP
-      port: 6443
+  project: default
+  source:
+    repoURL: https://headlamp-k8s.github.io/headlamp/
+    chart: headlamp
+    targetRevision: 0.39.0
+    helm:
+      values: |
+        config:
+          pluginsDir: "/build/plugins"
+        
+        initContainers:
+          - name: kubescape-plugin
+            image: quay.io/kubescape/headlamp-plugin:v0.10.3
+            command: ["/bin/sh", "-c"]
+            args:
+              - "mkdir -p /build/plugins && cp -r /plugins/* /build/plugins/"
+            volumeMounts:
+              - name: headlamp-plugins
+                mountPath: /build/plugins
+            securityContext:
+              allowPrivilegeEscalation: false
+              runAsNonRoot: true
+              runAsUser: 1000
+              capabilities:
+                drop: ["ALL"]
+
+        volumeMounts:
+          - name: headlamp-plugins
+            mountPath: /build/plugins
+
+        volumes:
+          - name: headlamp-plugins
+            emptyDir: {}
+
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1000
+          fsGroup: 1000
+        
+        containerSecurityContext:
+          allowPrivilegeEscalation: false
+          seccompProfile:
+            type: RuntimeDefault
+          capabilities:
+            drop: ["ALL"]
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: headlamp
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
