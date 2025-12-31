@@ -61,15 +61,19 @@ spec:
             fsGroup: 1000
             seccompProfile:
               type: RuntimeDefault
-          containers:
-          - name: "*"
-            securityContext:
-              allowPrivilegeEscalation: false
-              seccompProfile:
-                type: RuntimeDefault
-              capabilities:
-                drop:
-                  - ALL
+        foreach:
+        - list: request.object.spec.[ephemeralContainers, initContainers, containers][]
+          patchStrategicMerge:
+            spec:
+              containers:
+              - name: "{{ element.name }}"
+                securityContext:
+                  allowPrivilegeEscalation: false
+                  seccompProfile:
+                    type: RuntimeDefault
+                  capabilities:
+                    drop:
+                      - ALL
 # TODO: Add network, resource policies. Exceptions for some namespaces
 ---
 # Test by adding nginx without any sec stuff
