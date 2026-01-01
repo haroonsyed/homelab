@@ -1,67 +1,67 @@
 
-apiVersion: kyverno.io/v1
-kind: ClusterPolicy
-metadata:
-  name: add-secure-container-default
-spec:
-  rules:
-  - name: add-security-context
-    match:
-      resources:
-        kinds:
-        - Pod
-    exclude:
-      resources:
-        namespaces:
-        - kube-system
-        - kyverno
-        - argocd
-    mutate:
-      patchStrategicMerge:
-        spec:
-          securityContext:
-            runAsNonRoot: true
-            runAsUser: 1000
-            fsGroup: 1000
-            seccompProfile:
-              type: RuntimeDefault
----
-apiVersion: kyverno.io/v1
-kind: ClusterPolicy
-metadata:
-  name: add-secure-pod-default
-spec:
-  rules:
-  - name: add-security-context
-    match:
-      resources:
-        kinds:
-        - Pod
-    exclude:
-      resources:
-        namespaces:
-        - kube-system
-        - kyverno
-        - argocd
-    mutate:
-      foreach:
-      - list: "request.object.spec.[containers, initContainers, ephemeralContainers][] | []"
-        patchStrategicMerge:
-          spec:
-            securityContext:
-              runAsNonRoot: true
-              runAsUser: 1000
-              fsGroup: 1000
-              seccompProfile:
-                type: RuntimeDefault
-            containers:
-            - name: "{{ element.name }}"
-              securityContext:
-                capabilities:
-                  drop:
-                    - ALL
-              resources:
-                requests:
-                  +(memory): "100Mi"
-                  +(cpu): "100m"
-# TODO: Add network, resource policies. Exceptions for some namespaces
+# apiVersion: kyverno.io/v1
+# kind: ClusterPolicy
+# metadata:
+#   name: add-secure-container-default
+# spec:
+#   rules:
+#   - name: add-security-context
+#     match:
+#       resources:
+#         kinds:
+#         - Pod
+#     exclude:
+#       resources:
+#         namespaces:
+#         - kube-system
+#         - kyverno
+#         - argocd
+#     mutate:
+#       patchStrategicMerge:
+#         spec:
+#           securityContext:
+#             runAsNonRoot: true
+#             runAsUser: 1000
+#             fsGroup: 1000
+#             seccompProfile:
+#               type: RuntimeDefault
+# ---
+# apiVersion: kyverno.io/v1
+# kind: ClusterPolicy
+# metadata:
+#   name: add-secure-pod-default
+# spec:
+#   rules:
+#   - name: add-security-context
+#     match:
+#       resources:
+#         kinds:
+#         - Pod
+#     exclude:
+#       resources:
+#         namespaces:
+#         - kube-system
+#         - kyverno
+#         - argocd
+#     mutate:
+#       foreach:
+#       - list: "request.object.spec.[containers, initContainers, ephemeralContainers][] | []"
+#         patchStrategicMerge:
+#           spec:
+#             securityContext:
+#               runAsNonRoot: true
+#               runAsUser: 1000
+#               fsGroup: 1000
+#               seccompProfile:
+#                 type: RuntimeDefault
+#             containers:
+#             - name: "{{ element.name }}"
+#               securityContext:
+#                 capabilities:
+#                   drop:
+#                     - ALL
+#               resources:
+#                 requests:
+#                   +(memory): "100Mi"
+#                   +(cpu): "100m"
+# # TODO: Add network, resource policies. Exceptions for some namespaces
