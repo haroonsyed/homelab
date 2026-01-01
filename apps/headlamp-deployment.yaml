@@ -13,63 +13,6 @@ spec:
     targetRevision: 0.39.0
     helm:
       values: |
-        config:
-          pluginsDir: "/build/plugins"
-        
-        initContainers:
-          - name: kubescape-plugin
-            image: quay.io/kubescape/headlamp-plugin:v0.10.3
-            command: ["/bin/sh", "-c"]
-            args:
-              - "mkdir -p /build/plugins && cp -r /plugins/* /build/plugins/"
-            volumeMounts:
-              - name: headlamp-plugins
-                mountPath: /build/plugins
-            securityContext:
-              allowPrivilegeEscalation: false
-              runAsNonRoot: true
-              readOnlyRootFilesystem: true
-              runAsUser: 1000
-              seccompProfile:
-                type: RuntimeDefault
-              capabilities:
-                drop:
-                  - ALL
-
-        volumeMounts:
-          - name: headlamp-plugins
-            mountPath: /build/plugins
-
-        volumes:
-          - name: headlamp-plugins
-            emptyDir: {}
-
-        securityContext:
-          runAsNonRoot: true
-          privileged: false
-          allowPrivilegeEscalation: false
-          runAsUser: 1000
-          runAsGroup: 1000
-          seccompProfile:
-            type: RuntimeDefault
-          capabilities:
-            drop:
-              - ALL
-        
-        podSecurityContext:
-          fsGroup: 1000
-          runAsNonRoot: true
-          privileged: false
-          allowPrivilegeEscalation: false
-          runAsUser: 1000
-          runAsGroup: 1000
-          seccompProfile:
-            type: RuntimeDefault
-          capabilities:
-              drop:
-                - ALL
-        config:
-          watchPlugins: true
 
   destination:
     server: https://kubernetes.default.svc
