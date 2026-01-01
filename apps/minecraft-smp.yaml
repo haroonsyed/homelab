@@ -37,7 +37,7 @@ spec:
   ingress:
   - from:
     - ipBlock:
-        cidr: 0.0.0.0/0g
+        cidr: 0.0.0.0/0
     ports:
     - protocol: TCP
       port: 25565 # Minecraft
