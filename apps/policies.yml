@@ -14,8 +14,6 @@ spec:
       resources:
         namespaces:
         - kube-system
-        - kyverno
-        - argocd
     mutate:
       patchStrategicMerge:
         spec:
@@ -41,7 +39,6 @@ spec:
       resources:
         namespaces:
         - kube-system
-        - kubescape
     mutate:
       foreach:
       - list: "request.object.spec.[containers, initContainers, ephemeralContainers][] | []"
