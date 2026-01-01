@@ -82,4 +82,55 @@ spec:
       patchStrategicMerge:
         spec:
           automountServiceAccountToken: false
-# TODO: Add network, resource policies. Exceptions for some namespaces
+---
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: generate-default-deny
+spec:
+  generateExisting: true 
+  rules:
+  - name: default-intra-namespace-only-networking
+    match:
+      any:
+      - resources:
+          kinds:
+          - Namespace
+      exclude:
+        resources:
+          names:
+          - kube-system
+          - argocd
+          - kyverno
+          - monitoring
+    generate:
+      apiVersion: networking.k8s.io/v1
+      kind: NetworkPolicy
+      name: default-intra-namespace-only-networking
+      namespace: "{{request.object.metadata.name}}"
+      synchronize: true
+      data:
+        spec:
+          podSelector: {}
+          policyTypes:
+          - Ingress
+          - Egress
+          ingress:
+          - from:
+            - podSelector: {}
+          egress:
+          - to:
+            - podSelector: {}
+            - namespaceSelector: 
+                matchLabels:
+                  kubernetes.io/metadata.name: kube-system
+              podSelector:
+                matchLabels:
+                  k8s-app: kube-dns
+            ports:
+            - protocol: UDP
+              port: 53
+            - protocol: TCP
+              port: 53
+---
+      
