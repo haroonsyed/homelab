@@ -1,20 +1,20 @@
-# ---
-# # Test by adding nginx without any sec stuff
-# apiVersion: v1
-# kind: Deployment
-# metadata:
-#   name: insecure-app
-#   namespace: default
-# spec:
-#   replicas: 1
-#   selector:
-#     matchLabels:
-#       app: insecure-app
-#   template:
-#     metadata:
-#       labels:
-#         app: insecure-app
-#     spec:
-#       containers:
-#         - name: app
-#           image: nginx
+---
+# Test by adding nginx without any sec stuff
+apiVersion: v1
+kind: Deployment
+metadata:
+  name: insecure-app
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: insecure-app
+  template:
+    metadata:
+      labels:
+        app: insecure-app
+    spec:
+      containers:
+        - name: app
+          image: nginx
