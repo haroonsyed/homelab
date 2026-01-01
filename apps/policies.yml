@@ -57,6 +57,7 @@ spec:
             containers:
             - name: "{{ element.name }}"
               securityContext:
+                allowPrivilegeEscalation: false
                 capabilities:
                   drop:
                     - ALL
