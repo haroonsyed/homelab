@@ -13,6 +13,22 @@ spec:
     targetRevision: 80.9.2
     helm:
       values: |
+        grafana:
+          persistence:
+            enabled: true
+            type: pvc
+            size: 8Gi
+            accessModes:
+              - ReadWriteOnce
+        prometheus:
+          prometheusSpec:
+            storageSpec:
+              volumeClaimTemplate:
+                spec:
+                  accessModes: ["ReadWriteOnce"]
+                  resources:
+                    requests:
+                      storage: 16Gi
   destination:
     server: https://kubernetes.default.svc
     namespace: monitoring
