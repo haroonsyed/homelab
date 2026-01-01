@@ -17,8 +17,6 @@ spec:
             replicas: 1
           webhookLabels:
             app.kubernetes.io/managed-by: argocd
-
-
     - repoURL: https://kyverno.github.io/kyverno/
       chart: kyverno-policies
       targetRevision: 2.1.0
