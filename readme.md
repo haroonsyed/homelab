@@ -36,5 +36,6 @@ Things to remember to do for creating the cluster correctly:
 
 
 To monitor:
+`sudo kubectl --kubeconfig /etc/rancher/k3s/k3s.yaml port-forward svc/headlamp -n headlamp 8080:80`
+`sudo kubectl --kubeconfig /etc/rancher/k3s/k3s.yaml port-forward -n monitoring deploy/monitoring-grafana 8081:3000`
 `sudo kubectl --kubeconfig /etc/rancher/k3s/k3s.yaml port-forward svc/argocd-server -n argocd 8082:443`
-`sudo kubectl --kubeconfig /etc/rancher/k3s/k3s.yaml port-forward headlamp-pod -n headlamp 8080:4466`
