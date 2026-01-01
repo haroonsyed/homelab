@@ -76,6 +76,7 @@ spec:
         - kube-system
         - argocd
         - kyverno
+        - headlamp
     mutate:
       patchStrategicMerge:
         spec:
