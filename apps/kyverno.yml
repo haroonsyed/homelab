@@ -24,7 +24,6 @@ spec:
         values: |
           podSecurityStandard: restricted
           validationFailureAction: Audit
-
   destination:
     server: https://kubernetes.default.svc
     namespace: kyverno
