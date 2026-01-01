@@ -4,6 +4,8 @@ kind: ClusterPolicy
 metadata:
   name: add-secure-container-default
 spec:
+  admission: true
+  background: true
   rules:
   - name: add-security-context
     match:
@@ -30,6 +32,8 @@ kind: ClusterPolicy
 metadata:
   name: add-secure-pod-default
 spec:
+  admission: true
+  background: true
   rules:
   - name: add-security-context
     match:
@@ -67,6 +71,8 @@ kind: ClusterPolicy
 metadata:
   name: disable-automount-service-token
 spec:
+  admission: true
+  background: true
   rules:
   - name: add-security-context
     match:
@@ -91,7 +97,9 @@ kind: ClusterPolicy
 metadata:
   name: generate-default-deny
 spec:
-  generateExisting: true 
+  generateExisting: true
+  admission: true
+  background: true
   rules:
   - name: default-intra-namespace-only-networking
     match:

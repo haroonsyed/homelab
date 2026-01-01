@@ -4,7 +4,7 @@ metadata:
   name: argocd-manager
   namespace: argocd
   annotations:
-    argocd.argoproj.io/compare-options: ServerSideDiff=true
+    argocd.argoproj.io/compare-options: ServerSideDiff=true,IncludeMutationWebhook=false
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
