@@ -21,3 +21,22 @@ spec:
     automated:
       prune: true
       selfHeal: true
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow headlamp-egress to kube api
+  namespace: headlamp
+spec:
+  podSelector: 
+    matchLabels:
+      app: headlamp
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - ipBlock:
+        cidr: 10.43.0.0/16
+    ports:
+    - protocol: TCP
+      port: 443
