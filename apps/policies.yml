@@ -58,22 +58,22 @@ spec:
       foreach:
       - list: request.object.spec.[ephemeralContainers, initContainers, containers][]
         patchStrategicMerge:
-            spec:
-              securityContext:
-              runAsNonRoot: true
-              runAsUser: 1000
-              fsGroup: 1000
+          spec:
+            securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+            fsGroup: 1000
+            seccompProfile:
+              type: RuntimeDefault
+          containers:
+          - name: "{{ element.name }}"
+            securityContext:
+              allowPrivilegeEscalation: false
               seccompProfile:
                 type: RuntimeDefault
-            containers:
-            - name: "{{ element.name }}"
-              securityContext:
-                allowPrivilegeEscalation: false
-                seccompProfile:
-                  type: RuntimeDefault
-                capabilities:
-                  drop:
-                    - ALL
+              capabilities:
+                drop:
+                  - ALL
 # TODO: Add network, resource policies. Exceptions for some namespaces
 ---
 # Test by adding nginx without any sec stuff
