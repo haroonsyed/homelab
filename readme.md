@@ -2,14 +2,13 @@ Things to remember to do for creating the cluster correctly:
 1. Install argoCD: https://argo-cd.readthedocs.io/en/stable/
 2. For K3S make sure 
 ```
-      "--write-kubeconfig-mode 600"
-      #"--disable servicelb"
-      #"--disable traefik"
+      "--write-kubeconfig-mode=600"
+      "--disable=traefik"
       "--secrets-encryption"
       "--kube-apiserver-arg=admission-control-config-file=/etc/rancher/k3s/server/psa.yaml"
       "--kubelet-arg=pod-max-pids=2048"
       "--kube-apiserver-arg=enable-admission-plugins=NodeRestriction"
-      #"--kubelet-arg=tls-cipher-suites=TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305"
+      # "--kubelet-arg=tls-cipher-suites=TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305"
 ```
 3. Create a PSA (See https://docs.k3s.io/security/hardening-guide for security guidance)
 ```
@@ -28,7 +27,7 @@ Things to remember to do for creating the cluster correctly:
         exemptions:
           usernames: []
           runtimeClasses: []
-          namespaces: [kube-system, argocd, kyverno]
+          namespaces: [kube-system]
 ```
 4. For MC make sure these env are set:
 - LOCAL_BACKUP_DIR: /mc-storage/server
