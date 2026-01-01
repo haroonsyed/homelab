@@ -1,33 +1,33 @@
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: argocd-manager
-  namespace: argocd
-  annotations:
-    argocd.argoproj.io/compare-options: ServerSideDiff=true
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
-spec:
-  project: default
-  source:
-    repoURL: 'https://github.com/haroonsyed/homelab'
-    targetRevision: HEAD
-    path: apps
-    directory:
-      recurse: true
-    ignoreDifferences:
-    - group: kyverno.io
-      kind: ClusterPolicy
-      jqPathExpressions:
-        - .spec.rules[] | select(.name|test("autogen-."))
-  destination:
-    server: 'https://kubernetes.default.svc'
-    namespace: argocd
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
-      - ServerSideApply=true
-      - RespectIgnoreDifferences=true
+# apiVersion: argoproj.io/v1alpha1
+# kind: Application
+# metadata:
+#   name: argocd-manager
+#   namespace: argocd
+#   annotations:
+#     argocd.argoproj.io/compare-options: ServerSideDiff=true
+#   finalizers:
+#     - resources-finalizer.argocd.argoproj.io
+# spec:
+#   project: default
+#   source:
+#     repoURL: 'https://github.com/haroonsyed/homelab'
+#     targetRevision: HEAD
+#     path: apps
+#     directory:
+#       recurse: true
+#     ignoreDifferences:
+#     - group: kyverno.io
+#       kind: ClusterPolicy
+#       jqPathExpressions:
+#         - .spec.rules[] | select(.name|test("autogen-."))
+#   destination:
+#     server: 'https://kubernetes.default.svc'
+#     namespace: argocd
+#   syncPolicy:
+#     automated:
+#       prune: true
+#       selfHeal: true
+#     syncOptions:
+#       - CreateNamespace=true
+#       - ServerSideApply=true
+#       - RespectIgnoreDifferences=true
