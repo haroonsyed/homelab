@@ -3,6 +3,8 @@ kind: Application
 metadata:
   name: kyverno-stack
   namespace: argocd
+  annotations:
+    argocd.argoproj.io/compare-options: ServerSideDiff=true,IncludeMutationWebhook=true
 spec:
   project: default
   sources:
@@ -13,6 +15,9 @@ spec:
         values: |
           admissionController:
             replicas: 1
+          webhookLabels:
+            app.kubernetes.io/managed-by: argocd
+
 
     - repoURL: https://kyverno.github.io/kyverno/
       chart: kyverno-policies
