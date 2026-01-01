@@ -63,19 +63,20 @@ spec:
             fsGroup: 1000
             seccompProfile:
               type: RuntimeDefault
-          containers:
-            - (name): "{{element.name}}"
-              securityContext:
-                allowPrivilegeEscalation: false
-                seccompProfile:
-                  type: RuntimeDefault
-                capabilities:
-                  drop:
-                    - ALL
-              resources:
-                requests:
-                  +(memory): "100Mi"
-                  +(cpu): "100m"
+      foreach:
+        - list: "request.object.spec.[containers, initContainers, ephemeralContainers][] | []"
+          patchStrategicMerge:
+            spec:
+              containers:
+              - name: "{{ element.name }}"
+                securityContext:
+                  capabilities:
+                    drop:
+                      - ALL
+                resources:
+                  requests:
+                    +(memory): "100Mi"
+                    +(cpu): "100m"
 # TODO: Add network, resource policies. Exceptions for some namespaces
 ---
 # Test by adding nginx without any sec stuff
