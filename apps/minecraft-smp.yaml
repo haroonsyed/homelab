@@ -92,12 +92,6 @@ spec:
       labels:
         app: mc-server
     spec:
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 1000
-        fsGroup: 1000
-        seccompProfile:
-          type: RuntimeDefault
       containers:
       - name: minecraft
         image: docker.io/library/mc-server-manager:latest
@@ -112,13 +106,6 @@ spec:
         envFrom:
         - secretRef:
             name: mc-server-config
-        securityContext:
-          allowPrivilegeEscalation: false
-          seccompProfile:
-            type: RuntimeDefault
-          capabilities:
-              drop:
-                - ALL
         volumeMounts:
         - name: mc-storage
           mountPath: /mc-storage
