@@ -19,13 +19,13 @@
 #         - name: app
 #           image: nginx
 # ---
-# # Pod level test
-# apiVersion: v1
-# kind: Pod
-# metadata:
-#   name: insecure-app
-#   namespace: default
-# spec:
-#   containers:
-#     - name: app
-#       image: nginx
+# Pod level test
+apiVersion: v1
+kind: Pod
+metadata:
+  name: insecure-app
+  namespace: default
+spec:
+  containers:
+    - name: app
+      image: nginx
