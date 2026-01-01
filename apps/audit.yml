@@ -1,31 +1,29 @@
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: kubescape-operator
-  namespace: argocd
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
-spec:
-  project: default
-  source:
-    repoURL: https://kubescape.github.io/helm-charts/
-    chart: kubescape-operator
-    targetRevision: 1.30.0
-    helm:
-      values: |
-        clusterName: "homelab"
-        capabilities:
-          continuousScan: enable
-          networkPolicyService: enable
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: kubescape
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-    - CreateNamespace=true
+# apiVersion: argoproj.io/v1alpha1
+# kind: Application
+# metadata:
+#   name: kubescape-operator
+#   namespace: argocd
+#   finalizers:
+#     - resources-finalizer.argocd.argoproj.io
+# spec:
+#   project: default
+#   source:
+#     repoURL: https://kubescape.github.io/helm-charts/
+#     chart: kubescape-operator
+#     targetRevision: 1.30.0
+#     helm:
+#       values: |
+#         clusterName: "homelab"
+#         capabilities:
+#           continuousScan: enable
+#           networkPolicyService: enable
+#   destination:
+#     server: https://kubernetes.default.svc
+#     namespace: kubescape
+#   syncPolicy:
+#     automated:
+#       prune: true
+#       selfHeal: true
 
 # Below is for helm reference while i debug
 
