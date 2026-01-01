@@ -62,7 +62,7 @@ spec:
 apiVersion: kyverno.io/v1
 kind: ClusterPolicy
 metadata:
-  name: disable-automountServiceAccountToken
+  name: disable-automount-service-token
 spec:
   rules:
   - name: add-security-context
