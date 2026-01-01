@@ -47,16 +47,12 @@ spec:
       - list: "request.object.spec.[containers, initContainers, ephemeralContainers][] | []"
         patchStrategicMerge:
           spec:
-            securityContext:
-              runAsNonRoot: true
-              runAsUser: 1000
-              fsGroup: 1000
-              seccompProfile:
-                type: RuntimeDefault
             containers:
             - name: "{{ element.name }}"
               securityContext:
                 allowPrivilegeEscalation: false
+                seccompProfile:
+                  type: RuntimeDefault
                 capabilities:
                   drop:
                     - ALL
