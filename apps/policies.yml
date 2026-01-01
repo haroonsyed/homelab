@@ -55,27 +55,25 @@ spec:
         - kyverno
         - argocd
     mutate:
-      patchStrategicMerge:
-        spec:
-          securityContext:
-            runAsNonRoot: true
-            runAsUser: 1000
-            fsGroup: 1000
-            seccompProfile:
-              type: RuntimeDefault
-        foreach:
-        - list: request.object.spec.[ephemeralContainers, initContainers, containers][]
-          patchStrategicMerge:
+      foreach:
+      - list: request.object.spec.[ephemeralContainers, initContainers, containers][]
+        patchStrategicMerge:
             spec:
-              containers:
-              - name: "{{ element.name }}"
-                securityContext:
-                  allowPrivilegeEscalation: false
-                  seccompProfile:
-                    type: RuntimeDefault
-                  capabilities:
-                    drop:
-                      - ALL
+              securityContext:
+              runAsNonRoot: true
+              runAsUser: 1000
+              fsGroup: 1000
+              seccompProfile:
+                type: RuntimeDefault
+            containers:
+            - name: "{{ element.name }}"
+              securityContext:
+                allowPrivilegeEscalation: false
+                seccompProfile:
+                  type: RuntimeDefault
+                capabilities:
+                  drop:
+                    - ALL
 # TODO: Add network, resource policies. Exceptions for some namespaces
 ---
 # Test by adding nginx without any sec stuff
