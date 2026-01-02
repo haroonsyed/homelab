@@ -118,9 +118,18 @@ spec:
         - ServiceAccount
         names:
         - default
+    exclude:
+      resources:
+        namespaces:
+        - kube-system
+        - argocd
+        - kyverno
+        - headlamp
+        - monitoring
     mutate:
       patchStrategicMerge:
-        +(automountServiceAccountToken): false
+        spec:
+          automountServiceAccountToken: false
 ---
 apiVersion: kyverno.io/v1
 kind: ClusterPolicy
