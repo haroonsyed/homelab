@@ -14,6 +14,8 @@ spec:
     helm:
       values: |
         grafana:
+          initChownData:
+            enabled: false # https://github.com/grafana/helm-charts/blob/main/charts/grafana/README.md was causing issues with capabilities dropped
           persistence:
             enabled: true
             type: pvc
