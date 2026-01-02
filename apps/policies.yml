@@ -57,7 +57,6 @@ spec:
             containers:
             - name: "{{ element.name }}"
               securityContext:
-                readOnlyRootFilesystem: true
                 allowPrivilegeEscalation: false
                 seccompProfile:
                   type: RuntimeDefault
@@ -71,6 +70,35 @@ spec:
                 limits:
                   +(memory): "512Mi"
                   +(cpu): "500m"
+---
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: read-only-root-filesystem
+spec:
+  admission: true
+  background: true
+  rules:
+  - name: add-security-context
+    match:
+      resources:
+        kinds:
+        - Pod
+    exclude:
+      resources:
+        namespaces:
+        - kube-system
+        - monitoring
+        - headlamp
+    mutate:
+      foreach:
+      - list: "request.object.spec.[containers, initContainers, ephemeralContainers][] | []"
+        patchStrategicMerge:
+          spec:
+            containers:
+            - name: "{{ element.name }}"
+              securityContext:
+                readOnlyRootFilesystem: true
               volumeMounts:
               - name: "emptydir"
                 mountPath: /tmp
