@@ -90,6 +90,7 @@ spec:
         - kube-system
         - monitoring
         - headlamp
+        - argocd
     mutate:
       foreach:
       - list: "request.object.spec.[containers, initContainers, ephemeralContainers][] | []"
