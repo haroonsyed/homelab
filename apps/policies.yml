@@ -111,23 +111,16 @@ spec:
   admission: true
   background: true
   rules:
-  - name: add-security-context
+  - name: disable-automountserviceaccounttoken
     match:
       resources:
         kinds:
-        - Pod
-    exclude:
-      resources:
-        namespaces:
-        - kube-system
-        - argocd
-        - kyverno
-        - headlamp
-        - monitoring
+        - ServiceAccount
+        names:
+        - default
     mutate:
       patchStrategicMerge:
-        spec:
-          automountServiceAccountToken: false
+        +(automountServiceAccountToken): false
 ---
 apiVersion: kyverno.io/v1
 kind: ClusterPolicy
