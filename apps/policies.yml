@@ -89,7 +89,6 @@ spec:
         namespaces:
         - kube-system
         - monitoring
-        - headlamp
         - argocd
     mutate:
       foreach:
