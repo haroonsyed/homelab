@@ -66,6 +66,10 @@ spec:
                 limits:
                   +(memory): "512Mi"
                   +(cpu): "500m"
+              volumes:
+              - name: "{{ element.name }}-emptydir"
+                emptyDir: 
+                  sizeLimit: "64Mi"
 ---
 apiVersion: kyverno.io/v1
 kind: ClusterPolicy
