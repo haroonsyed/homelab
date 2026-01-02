@@ -45,14 +45,17 @@ spec:
         namespaces:
         - kube-system
     mutate:
+      patchStrategicMerge:
+        spec:
+          volumes:
+          - name: "emptydir"
+            emptyDir: {
+              sizeLimit: "64Mi"
+            }
       foreach:
       - list: "request.object.spec.[containers, initContainers, ephemeralContainers][] | []"
         patchStrategicMerge:
           spec:
-            volumes:
-              - name: "emptydir"
-                emptyDir: 
-                  sizeLimit: "64Mi"
             containers:
             - name: "{{ element.name }}"
               securityContext:
