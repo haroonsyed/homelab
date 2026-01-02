@@ -26,6 +26,11 @@ spec:
             +(runAsGroup): 1000
             seccompProfile:
               type: RuntimeDefault
+          volumes:
+          - name: "emptydir"
+            emptyDir: {
+              sizeLimit: "64Mi"
+            }
 ---
 apiVersion: kyverno.io/v1
 kind: ClusterPolicy
@@ -45,13 +50,6 @@ spec:
         namespaces:
         - kube-system
     mutate:
-      patchStrategicMerge:
-        spec:
-          volumes:
-          - name: "emptydir"
-            emptyDir: {
-              sizeLimit: "64Mi"
-            }
       foreach:
       - list: "request.object.spec.[containers, initContainers, ephemeralContainers][] | []"
         patchStrategicMerge:
