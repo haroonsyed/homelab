@@ -5,6 +5,7 @@ metadata:
   namespace: argocd
   annotations:
     argocd.argoproj.io/compare-options: ServerSideDiff=true,IncludeMutationWebhook=true
+    argocd.argoproj.io/sync-wave: "5" # Low priority, and then restart all apps
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
