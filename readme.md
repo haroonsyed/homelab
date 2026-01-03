@@ -26,14 +26,13 @@ General technologies:
 - Grafana + Prometheus for logging and monitoring (not much use right now, but was cool to setup some persistent volume claim)
 - A minecraft server as a "real" application to test with
 - Headlamp for UI administration
+- CrowdSec for blocking ips that are probably problematic
 
-As simple as the setup is/looks...it took a decent amount of failing to get working in the ~1 week I set the core of it up.
+As simple as the setup is/looks...it took a decent amount of failing to get working in the ~1 week I set the core of it up. Lot's of failed rabbit holes and understanding the ecosystem.
 
-I'm not an expert and not going to pretend like there probably isn't some security holes here...but most of it won't be exposed to the outside world anyway.
+Also I'm not an expert and there are probably some bad practices/security gaps in my configuration...was more for learning than anything else.
 
----
-
-Things to remember to do for creating the cluster correctly:
+### Install Instruction
 0. Install k3s (Includes reinstall instructions if you need to nuke existing install...I was playing around with cilium for a bit)
 ```
 sudo pkill -9 k3s
@@ -74,6 +73,7 @@ sudo nixos-rebuild switch -I nixos-config=/home/haroonsyed/.config/nixos/configu
 sudo kubectl --kubeconfig /etc/rancher/k3s/k3s.yaml create namespace argocd
 sudo kubectl --kubeconfig /etc/rancher/k3s/k3s.yaml apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 sudo kubectl --kubeconfig /etc/rancher/k3s/k3s.yaml apply -f manifest.yaml
+
 ```
 3. Create a PSA (See https://docs.k3s.io/security/hardening-guide for security guidance)
 ```

@@ -1,0 +1,35 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: crowdsec
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://crowdsecurity.github.io/helm-charts
+    chart: crowdsec
+    targetRevision: 0.21.1
+    helm:
+      values: |
+        lapi:
+          env:
+            - name: ENROLL_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: crowdsec-enroll-key
+                  key: enroll-key
+            - name: ENROLL_INSTANCE_NAME
+              value: "homelab-node"
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: crowdsec
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
