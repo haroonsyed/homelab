@@ -33,7 +33,7 @@ As simple as the setup is/looks...it took a decent amount of failing to get work
 Also I'm not an expert and there are probably some bad practices/security gaps in my configuration...was more for learning than anything else.
 
 ### Install Instruction
-0. Install k3s (Includes reinstall instructions if you need to nuke existing install...I was playing around with cilium for a bit)
+0. Install k3s and cilium cni (Includes reinstall instructions if you need to nuke existing install)
 ```
 sudo pkill -9 k3s
 sudo pkill -9 containerd-shim
@@ -57,16 +57,22 @@ sudo ip link delete flannel.1
 sudo iptables-save | grep -iv cilium | sudo iptables-restore
 sudo ip6tables-save | grep -iv cilium | sudo ip6tables-restore
 sudo nixos-rebuild switch -I nixos-config=/home/haroonsyed/.config/nixos/configuration-pc.nix --upgrade
+sudo cilium --kubeconfig /etc/rancher/k3s/k3s.yaml install --set operator.replicas=1 --set kubeProxyReplacement=true --version 1.18.5 --set hubble.enabled=true --set hubble.ui.enabled=true --set hubble.relay.enabled=true
+```
 1. For K3S make sure 
 ```
       "--write-kubeconfig-mode=600"
-      "--disable=traefik"
       "--secrets-encryption"
       "--kube-apiserver-arg=admission-control-config-file=/etc/rancher/k3s/server/psa.yaml"
       "--kubelet-arg=pod-max-pids=2048"
       "--kube-apiserver-arg=enable-admission-plugins=NodeRestriction"
       "--kubelet-arg=authentication-token-webhook=true"
       "--kubelet-arg=authorization-mode=Webhook"
+
+      "--disable=traefik,flannel,servicelb"
+      "--flannel-backend=none"
+      "--disable-network-policy"
+      "--disable-kube-proxy"
 ```
 2. Install argoCD and bootstrap from repo
 ```
@@ -103,6 +109,7 @@ To monitor: <br/>
 `sudo kubectl --kubeconfig /etc/rancher/k3s/k3s.yaml port-forward svc/headlamp -n headlamp 8080:80`<br/>
 `sudo kubectl --kubeconfig /etc/rancher/k3s/k3s.yaml port-forward -n monitoring deploy/monitoring-grafana 8081:3000`<br/>
 `sudo kubectl --kubeconfig /etc/rancher/k3s/k3s.yaml port-forward svc/argocd-server -n argocd 8082:443`<br/>
+`sudo kubectl --kubeconfig /etc/rancher/k3s/k3s.yaml port-forward -n kube-system svc/hubble-ui 8083:80`<br/>
 `sudo kubectl --kubeconfig /etc/rancher/k3s/k3s.yaml create token headlamp -n headlamp`
 
 To be aware of: 

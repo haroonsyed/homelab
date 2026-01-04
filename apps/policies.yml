@@ -102,93 +102,93 @@ spec:
               volumeMounts:
               - name: "emptydir"
                 mountPath: /tmp
----
-apiVersion: kyverno.io/v1
-kind: ClusterPolicy
-metadata:
-  name: disable-automountserviceaccounttoken
-  annotations:
-    policies.kyverno.io/title: Disable automountServiceAccountToken
-    policies.kyverno.io/category: Other, EKS Best Practices
-    policies.kyverno.io/severity: medium
-    policies.kyverno.io/subject: ServiceAccount
-    kyverno.io/kyverno-version: 1.5.1
-    kyverno.io/kubernetes-version: "1.21"
-    policies.kyverno.io/description: >-
-      A new ServiceAccount called `default` is created whenever a new Namespace is created.
-      Pods spawned in that Namespace, unless otherwise set, will be assigned this ServiceAccount.
-      This policy mutates any new `default` ServiceAccounts to disable auto-mounting of the token
-      into Pods obviating the need to do so individually.      
-spec:
-  rules:
-  - name: disable-automountserviceaccounttoken
-    match:
-      resources:
-        kinds:
-        - ServiceAccount
-        names:
-        - default
-    exclude:
-      resources:
-        namespaces:
-        - kube-system
-        - argocd
-        - kyverno
-        - headlamp
-        - monitoring
-    mutate:
-      patchStrategicMerge:
-        automountServiceAccountToken: false
----
-apiVersion: kyverno.io/v1
-kind: ClusterPolicy
-metadata:
-  name: generate-default-deny
-spec:
-  generateExisting: true
-  admission: true
-  background: true
-  rules:
-  - name: default-intra-namespace-only-networking
-    match:
-      any:
-      - resources:
-          kinds:
-          - Namespace
-    exclude:
-      resources:
-        names:
-        - kube-system
-        - argocd
-        - kyverno
-        - monitoring
-        - headlamp
-    generate:
-      apiVersion: networking.k8s.io/v1
-      kind: NetworkPolicy
-      name: default-intra-namespace-only-networking
-      namespace: "{{request.object.metadata.name}}"
-      synchronize: true
-      data:
-        spec:
-          podSelector: {}
-          policyTypes:
-          - Ingress
-          - Egress
-          ingress:
-          - from:
-            - podSelector: {}
-          egress:
-          - to:
-            - podSelector: {}
-            - namespaceSelector: 
-                matchLabels:
-                  kubernetes.io/metadata.name: kube-system
-              podSelector:
-                matchLabels:
-                  k8s-app: kube-dns
-            ports:
-            - protocol: UDP
-              port: 53
-            - protocol: TCP
-              port: 53
+# ---
+# apiVersion: kyverno.io/v1
+# kind: ClusterPolicy
+# metadata:
+#   name: disable-automountserviceaccounttoken
+#   annotations:
+#     policies.kyverno.io/title: Disable automountServiceAccountToken
+#     policies.kyverno.io/category: Other, EKS Best Practices
+#     policies.kyverno.io/severity: medium
+#     policies.kyverno.io/subject: ServiceAccount
+#     kyverno.io/kyverno-version: 1.5.1
+#     kyverno.io/kubernetes-version: "1.21"
+#     policies.kyverno.io/description: >-
+#       A new ServiceAccount called `default` is created whenever a new Namespace is created.
+#       Pods spawned in that Namespace, unless otherwise set, will be assigned this ServiceAccount.
+#       This policy mutates any new `default` ServiceAccounts to disable auto-mounting of the token
+#       into Pods obviating the need to do so individually.      
+# spec:
+#   rules:
+#   - name: disable-automountserviceaccounttoken
+#     match:
+#       resources:
+#         kinds:
+#         - ServiceAccount
+#         names:
+#         - default
+#     exclude:
+#       resources:
+#         namespaces:
+#         - kube-system
+#         - argocd
+#         - kyverno
+#         - headlamp
+#         - monitoring
+#     mutate:
+#       patchStrategicMerge:
+#         automountServiceAccountToken: false
+# ---
+# apiVersion: kyverno.io/v1
+# kind: ClusterPolicy
+# metadata:
+#   name: generate-default-deny
+# spec:
+#   generateExisting: true
+#   admission: true
+#   background: true
+#   rules:
+#   - name: default-intra-namespace-only-networking
+#     match:
+#       any:
+#       - resources:
+#           kinds:
+#           - Namespace
+#     exclude:
+#       resources:
+#         names:
+#         - kube-system
+#         - argocd
+#         - kyverno
+#         - monitoring
+#         - headlamp
+#     generate:
+#       apiVersion: networking.k8s.io/v1
+#       kind: NetworkPolicy
+#       name: default-intra-namespace-only-networking
+#       namespace: "{{request.object.metadata.name}}"
+#       synchronize: true
+#       data:
+#         spec:
+#           podSelector: {}
+#           policyTypes:
+#           - Ingress
+#           - Egress
+#           ingress:
+#           - from:
+#             - podSelector: {}
+#           egress:
+#           - to:
+#             - podSelector: {}
+#             - namespaceSelector: 
+#                 matchLabels:
+#                   kubernetes.io/metadata.name: kube-system
+#               podSelector:
+#                 matchLabels:
+#                   k8s-app: kube-dns
+#             ports:
+#             - protocol: UDP
+#               port: 53
+#             - protocol: TCP
+#               port: 53
