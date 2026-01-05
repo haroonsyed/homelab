@@ -57,7 +57,7 @@ sudo ip link delete flannel.1
 sudo iptables-save | grep -iv cilium | sudo iptables-restore
 sudo ip6tables-save | grep -iv cilium | sudo ip6tables-restore
 sudo nixos-rebuild switch -I nixos-config=/home/haroonsyed/.config/nixos/configuration-pc.nix --upgrade
-sudo cilium --kubeconfig /etc/rancher/k3s/k3s.yaml install --set operator.replicas=1 --set kubeProxyReplacement=true --version 1.18.5 --set hubble.enabled=true --set hubble.ui.enabled=true --set hubble.relay.enabled=true
+sudo cilium --kubeconfig /etc/rancher/k3s/k3s.yaml install --version 1.18.5 --set operator.replicas=1 --set kubeProxyReplacement=true --set routingMode=tunnel --set k8ServicePort=6443 --set nodeIPAM.enabled=true --set ipam.mode=kubernetes --set defaultLBServiceIPAM=nodeipam --set hubble.enabled=true --set hubble.ui.enabled=true --set hubble.relay.enabled=true
 ```
 1. For K3S make sure 
 ```
