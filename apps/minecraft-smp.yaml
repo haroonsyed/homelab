@@ -31,6 +31,14 @@ spec:
   endpointSelector:
     matchLabels:
       app: mc-server
+  ingress:
+    # MC Game Port
+    - fromEntities:
+        - world
+      toPorts:
+        - ports:
+            - port: "25565"
+              protocol: TCP
   egress:
     # Gdrive & Mojang
     - toFQDNs:
@@ -41,13 +49,10 @@ spec:
         - ports:
             - port: "443"
               protocol: TCP
-    # Minecraft Server
     - toEntities:
         - world
       toPorts:
         - ports:
-            - port: "25565"
-              protocol: TCP
             - port: "24454" # Voice Chat
               protocol: UDP 
 ---
