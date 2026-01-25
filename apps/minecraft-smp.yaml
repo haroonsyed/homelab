@@ -44,6 +44,8 @@ spec:
     - toFQDNs:
         - matchName: "drive.google.com"
         - matchPattern: "*.googleapis.com"
+        - matchPattern: "*.googleusercontent.com"
+        - matchPattern: "*.gstatic.com"
         - matchName: "authserver.mojang.com"
       toPorts:
         - ports:
