@@ -22,41 +22,36 @@ spec:
       port: 24454
       targetPort: 24454
 ---
-apiVersion: "cilium.io/v2"
-kind: CiliumNetworkPolicy
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
 metadata:
-  name: mc-egress
+  name: allow
   namespace: mc-server
 spec:
-  endpointSelector:
+  podSelector: 
     matchLabels:
       app: mc-server
+  policyTypes:
+  - Ingress
+  - Egress
   ingress:
-    # MC Game Port
-    - fromEntities:
-        - world
-      toPorts:
-        - ports:
-            - port: "25565"
-              protocol: TCP
+  - from:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+    ports:
+    - protocol: TCP
+      port: 25565 # Minecraft
+    - protocol: UDP
+      port: 24454 # Voice chat
   egress:
-    # Gdrive & Mojang
-    - toFQDNs:
-        - matchName: "drive.google.com"
-        - matchPattern: "*.googleapis.com"
-        - matchPattern: "*.googleusercontent.com"
-        - matchPattern: "*.gstatic.com"
-        - matchName: "authserver.mojang.com"
-      toPorts:
-        - ports:
-            - port: "443"
-              protocol: TCP
-    - toEntities:
-        - world
-      toPorts:
-        - ports:
-            - port: "24454" # Voice Chat
-              protocol: UDP 
+  - to:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+    ports:
+    - protocol: TCP
+      port: 443 # For auth servers, look into using mesh network to restrict this more later
+    - protocol: UDP
+      port: 24454 # Voice chat
 ---
 apiVersion: apps/v1
 kind: Deployment
