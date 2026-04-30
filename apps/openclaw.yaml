@@ -15,6 +15,9 @@ spec:
       app: openclaw
   template:
     spec:
+      metadata:
+        labels:
+          app: openclaw
       containers:
       - name: openclaw
         image: ghcr.io/openclaw/openclaw:latest
