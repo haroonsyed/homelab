@@ -14,10 +14,10 @@ spec:
     matchLabels:
       app: openclaw
   template:
+    metadata:
+      labels:
+        app: openclaw
     spec:
-      metadata:
-        labels:
-          app: openclaw
       containers:
       - name: openclaw
         image: ghcr.io/openclaw/openclaw:latest
