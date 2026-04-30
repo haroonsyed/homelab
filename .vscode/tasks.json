@@ -1,0 +1,53 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "K3s Operations",
+      "dependsOrder": "parallel",
+      "dependsOn": [
+        "Headlamp Tunnel",
+        "Grafana Tunnel",
+        "ArgoCD Tunnel",
+        "Hubble Tunnel",
+        "Get Tokens"
+      ],
+      "runOptions": {
+        "runOn": "folderOpen"
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "Headlamp Tunnel",
+      "type": "shell",
+      "command": "sudo kubectl --kubeconfig /etc/rancher/k3s/k3s.yaml port-forward svc/headlamp -n headlamp 8080:80",
+      "presentation": { "group": "k3s-group", "panel": "new", "focus": false }
+    },
+    {
+      "label": "Grafana Tunnel",
+      "type": "shell",
+      "command": "sudo kubectl --kubeconfig /etc/rancher/k3s/k3s.yaml port-forward -n monitoring deploy/monitoring-grafana 8081:3000",
+      "presentation": { "group": "k3s-group", "panel": "new", "focus": false }
+    },
+    {
+      "label": "ArgoCD Tunnel",
+      "type": "shell",
+      "command": "sudo kubectl --kubeconfig /etc/rancher/k3s/k3s.yaml port-forward svc/argocd-server -n argocd 8082:443",
+      "presentation": { "group": "k3s-group", "panel": "new", "focus": false }
+    },
+    {
+      "label": "Hubble Tunnel",
+      "type": "shell",
+      "command": "sudo kubectl --kubeconfig /etc/rancher/k3s/k3s.yaml port-forward -n kube-system svc/hubble-ui 8083:80",
+      "presentation": { "group": "k3s-group", "panel": "new", "focus": false }
+    },
+    {
+      "label": "Get Tokens",
+      "type": "shell",
+      "command": "echo '--- HEADLAMP TOKEN ---' && sudo kubectl --kubeconfig /etc/rancher/k3s/k3s.yaml create token headlamp -n headlamp && echo '' && echo '--- OPENCLAW TOKEN ---' && sudo kubectl exec -n openclaw deploy/openclaw -- openclaw config get gateway.auth.token",
+      "presentation": { "group": "k3s-group", "panel": "new", "focus": true, "reveal": "always" }
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "remote.portsAttributes": {
+    "8080": {
+      "label": "Headlamp",
+      "onAutoForward": "openBrowser"
+    },
+    "8081": {
+      "label": "Grafana",
+      "onAutoForward": "openBrowser"
+    },
+    "8082": {
+      "label": "ArgoCD",
+      "onAutoForward": "openBrowser"
+    },
+    "8083": {
+      "label": "Hubble",
+      "onAutoForward": "openBrowser"
+    }
+  }
+}
