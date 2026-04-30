@@ -9,6 +9,7 @@
         "Grafana Tunnel",
         "ArgoCD Tunnel",
         "Hubble Tunnel",
+        "OpenClaw Tunnel",
         "Get Tokens"
       ],
       "runOptions": {
@@ -42,6 +43,12 @@
       "type": "shell",
       "command": "sudo kubectl --kubeconfig /etc/rancher/k3s/k3s.yaml port-forward -n kube-system svc/hubble-ui 8083:80",
       "presentation": { "group": "k3s-group", "panel": "new", "focus": false }
+    },
+    {
+      "label": "OpenClaw Tunnel",
+      "type": "shell",
+      "command": "sudo kubectl --kubeconfig /etc/rancher/k3s/k3s.yaml port-forward svc/openclaw -n openclaw 8084:80",
+      "presentation": { "group": "k3s-group", "panel": "new", "focus": false, "reveal": "always" }
     },
     {
       "label": "Get Tokens",

@@ -103,7 +103,8 @@ sudo kubectl --kubeconfig /etc/rancher/k3s/k3s.yaml apply -f manifest.yaml
 4. For MC make sure these env are set:
 - LOCAL_BACKUP_DIR: /mc-storage/server
 - LOCAL_SERVER_DIR: /mc-storage/backups
-
+5. For openclaw make sure any model api keys are set
+- ai-keys:GEMINI_API_KEY
 
 To monitor: <br/>
 `sudo kubectl --kubeconfig /etc/rancher/k3s/k3s.yaml port-forward svc/headlamp -n headlamp 8080:80`<br/>
@@ -111,6 +112,7 @@ To monitor: <br/>
 `sudo kubectl --kubeconfig /etc/rancher/k3s/k3s.yaml port-forward svc/argocd-server -n argocd 8082:443`<br/>
 `sudo kubectl --kubeconfig /etc/rancher/k3s/k3s.yaml port-forward -n kube-system svc/hubble-ui 8083:80`<br/>
 `sudo kubectl --kubeconfig /etc/rancher/k3s/k3s.yaml create token headlamp -n headlamp`
+`sudo kubectl exec -n openclaw deploy/openclaw -- openclaw config get gateway.auth.token`
 
 To be aware of: 
 - https://media.defense.gov/2022/Aug/29/2003066362/-1/-1/0/CTR_KUBERNETES_HARDENING_GUIDANCE_1.2_20220829.PDF

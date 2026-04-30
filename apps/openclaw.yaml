@@ -1,0 +1,53 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: openclaw
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: openclaw
+  namespace: openclaw
+spec:
+  replicas: 1
+  template:
+    spec:
+      containers:
+      - name: openclaw
+        image: ghcr.io/openclaw/openclaw:latest
+        ports:
+        - containerPort: 18789
+        env:
+        - name: OLLAMA_BASE_URL
+          value: "http://ollama-service:11434"
+        - name: GEMINI_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: ai-keys
+              key: GEMINI_API_KEY
+        resources:
+          requests:
+            memory: "4Gi"
+            cpu: "2"
+          limits:
+            cpu: "4"
+            memory: "12Gi"
+        volumeMounts:
+        - name: openclaw-storage
+          mountPath: /home/node/.openclaw # Default openclaw location
+      volumes:
+      - name: openclaw-storage
+        persistentVolumeClaim:
+          claimName: openclaw-storage-pvc
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: openclaw-storage-pvc
+  namespace: openclaw
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 50Gi
