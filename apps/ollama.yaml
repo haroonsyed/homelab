@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: ollama
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/haroonsyed/homelab.git'
+    path: apps/ollama
+    targetRevision: HEAD
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: ollama
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeck: true
