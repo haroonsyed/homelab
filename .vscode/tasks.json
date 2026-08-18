@@ -45,12 +45,6 @@
       "presentation": { "group": "k3s-group", "panel": "new", "focus": false }
     },
     {
-      "label": "OpenClaw Tunnel",
-      "type": "shell",
-      "command": "sudo kubectl --kubeconfig /etc/rancher/k3s/k3s.yaml port-forward -n openclaw deploy/openclaw 8084:18789",
-      "presentation": { "group": "k3s-group", "panel": "new", "focus": false, "reveal": "always" }
-    },
-    {
       "label": "Get Tokens",
       "type": "shell",
       "command": "echo '--- HEADLAMP TOKEN ---' && sudo kubectl --kubeconfig /etc/rancher/k3s/k3s.yaml create token headlamp -n headlamp && echo '' && echo '--- OPENCLAW TOKEN ---' && sudo kubectl --kubeconfig /etc/rancher/k3s/k3s.yaml exec -n openclaw deploy/openclaw -- grep -oP '\"token\":\\s*\"\\K[^\"]+' /home/node/.openclaw/openclaw.json",      

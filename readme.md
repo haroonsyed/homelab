@@ -111,7 +111,6 @@ To monitor: <br/>
 `sudo kubectl --kubeconfig /etc/rancher/k3s/k3s.yaml port-forward -n monitoring deploy/monitoring-grafana 8081:3000`<br/>
 `sudo kubectl --kubeconfig /etc/rancher/k3s/k3s.yaml port-forward svc/argocd-server -n argocd 8082:443`<br/>
 `sudo kubectl --kubeconfig /etc/rancher/k3s/k3s.yaml port-forward -n kube-system svc/hubble-ui 8083:80`<br/>
-`sudo kubectl --kubeconfig /etc/rancher/k3s/k3s.yaml port-forward -n openclaw openclaw 8084:80`<br/>
 `sudo kubectl --kubeconfig /etc/rancher/k3s/k3s.yaml create token headlamp -n headlamp`
 `sudo kubectl exec -n openclaw deploy/openclaw -- openclaw config get gateway.auth.token`
 
