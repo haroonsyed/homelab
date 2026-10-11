@@ -100,11 +100,7 @@ sudo kubectl --kubeconfig /etc/rancher/k3s/k3s.yaml apply -f manifest.yaml
           runtimeClasses: []
           namespaces: [kube-system]
 ```
-4. For MC make sure these env are set:
-- LOCAL_BACKUP_DIR: /mc-storage/server
-- LOCAL_SERVER_DIR: /mc-storage/backups
-5. For openclaw make sure any model api keys are set
-- ai-keys:GEMINI_API_KEY
+4. Configure secrets for applications
 
 To monitor: <br/>
 `sudo kubectl --kubeconfig /etc/rancher/k3s/k3s.yaml port-forward svc/headlamp -n headlamp 8080:80`<br/>
