@@ -136,6 +136,7 @@ spec:
         - kyverno
         - headlamp
         - monitoring
+        - trivy-system
     mutate:
       patchStrategicMerge:
         automountServiceAccountToken: false
@@ -163,6 +164,7 @@ spec:
         - kyverno
         - monitoring
         - headlamp
+        - trivy-system
     generate:
       apiVersion: networking.k8s.io/v1
       kind: NetworkPolicy
