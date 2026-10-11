@@ -3,6 +3,8 @@ apiVersion: kyverno.io/v1
 kind: ClusterPolicy
 metadata:
   name: add-secure-container-default
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
 spec:
   admission: true
   background: true
@@ -36,6 +38,8 @@ apiVersion: kyverno.io/v1
 kind: ClusterPolicy
 metadata:
   name: add-secure-pod-default
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
 spec:
   admission: true
   background: true
@@ -75,6 +79,8 @@ apiVersion: kyverno.io/v1
 kind: ClusterPolicy
 metadata:
   name: read-only-root-filesystem
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
 spec:
   admission: true
   background: true
@@ -108,6 +114,7 @@ kind: ClusterPolicy
 metadata:
   name: disable-automountserviceaccounttoken
   annotations:
+    argocd.argoproj.io/sync-wave: "-1"
     policies.kyverno.io/title: Disable automountServiceAccountToken
     policies.kyverno.io/category: Other, EKS Best Practices
     policies.kyverno.io/severity: medium
@@ -145,6 +152,8 @@ apiVersion: kyverno.io/v1
 kind: ClusterPolicy
 metadata:
   name: generate-default-deny
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
 spec:
   generateExisting: true
   admission: true

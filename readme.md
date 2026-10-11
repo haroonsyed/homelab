@@ -77,7 +77,7 @@ sudo cilium --kubeconfig /etc/rancher/k3s/k3s.yaml install --version 1.20.2 --se
 2. Install argoCD and bootstrap from repo
 ```
 sudo kubectl --kubeconfig /etc/rancher/k3s/k3s.yaml create namespace argocd
-sudo kubectl --kubeconfig /etc/rancher/k3s/k3s.yaml apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+sudo kubectl --kubeconfig /etc/rancher/k3s/k3s.yaml apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml --server-side --force-conflicts
 sudo kubectl --kubeconfig /etc/rancher/k3s/k3s.yaml apply -f manifest.yaml
 
 ```
