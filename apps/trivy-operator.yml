@@ -24,3 +24,22 @@ spec:
     syncOptions:
       - CreateNamespace=true
       - ServerSideApply=true
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow
+  namespace: trivy-system
+spec:
+  podSelector: 
+    matchLabels:
+      app.kubernetes.io/name: trivy-operator
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+    ports:
+    - protocol: TCP
+      port: 443 # See if this can be restricted further
