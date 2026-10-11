@@ -33,7 +33,7 @@ As simple as the setup is/looks...it took a decent amount of failing to get work
 Also I'm not an expert and there are probably some bad practices/security gaps in my configuration...was more for learning than anything else.
 
 ### Install Instruction
-0. Install k3s and cilium cni (Includes reinstall instructions if you need to nuke existing install)
+0. Install k3s and cilium cni (nix shell nixpkgs#cilium-cli) (Includes reinstall instructions if you need to nuke existing install)
 ```
 sudo pkill -9 k3s
 sudo pkill -9 containerd-shim
@@ -56,8 +56,8 @@ sudo ip link delete cilium_vxlan
 sudo ip link delete flannel.1
 sudo iptables-save | grep -iv cilium | sudo iptables-restore
 sudo ip6tables-save | grep -iv cilium | sudo ip6tables-restore
-sudo nixos-rebuild switch -I nixos-config=/home/haroonsyed/.config/nixos/configuration-pc.nix --upgrade
-sudo cilium --kubeconfig /etc/rancher/k3s/k3s.yaml install --version 1.18.5 --set operator.replicas=1 --set kubeProxyReplacement=true --set routingMode=tunnel --set k8ServicePort=6443 --set nodeIPAM.enabled=true --set ipam.mode=kubernetes --set defaultLBServiceIPAM=nodeipam --set hubble.enabled=true --set hubble.ui.enabled=true --set hubble.relay.enabled=true
+sudo nixos-rebuild switch --flake ~/.config/nixos#desktop
+sudo cilium --kubeconfig /etc/rancher/k3s/k3s.yaml install --version 1.20.2 --set operator.replicas=1 --set kubeProxyReplacement=true --set routingMode=tunnel --set k8ServicePort=6443 --set nodeIPAM.enabled=true --set ipam.mode=kubernetes --set defaultLBServiceIPAM=nodeipam --set hubble.enabled=true --set hubble.ui.enabled=true --set hubble.relay.enabled=true
 ```
 1. For K3S make sure 
 ```

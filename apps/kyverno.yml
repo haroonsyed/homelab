@@ -13,7 +13,7 @@ spec:
   sources:
     - repoURL: https://kyverno.github.io/kyverno/
       chart: kyverno
-      targetRevision: 3.6.1
+      targetRevision: 3.9.1
       helm:
         values: |
           admissionController:
@@ -22,7 +22,7 @@ spec:
             app.kubernetes.io/managed-by: argocd
     - repoURL: https://kyverno.github.io/kyverno/
       chart: kyverno-policies
-      targetRevision: 2.1.0
+      targetRevision: 3.9.1
       helm:
         values: |
           podSecurityStandard: restricted
