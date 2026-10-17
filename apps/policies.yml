@@ -67,6 +67,34 @@ spec:
                 capabilities:
                   drop:
                     - ALL
+---
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: add-resource-limits
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
+spec:
+  admission: true
+  background: true
+  rules:
+  - name: add-default-resources
+    match:
+      resources:
+        kinds:
+        - Pod
+    exclude:
+      resources:
+        namespaces:
+        - kube-system
+        - argocd
+    mutate:
+      foreach:
+      - list: "request.object.spec.[containers, initContainers, ephemeralContainers][] | []"
+        patchStrategicMerge:
+          spec:
+            containers:
+            - name: "{{ element.name }}"
               resources:
                 requests:
                   +(memory): "100Mi"
