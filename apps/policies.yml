@@ -55,10 +55,34 @@ spec:
         - kube-system
     mutate:
       foreach:
-      - list: "request.object.spec.[containers, initContainers, ephemeralContainers][] | []"
+      - list: "request.object.spec.containers || []"
         patchStrategicMerge:
           spec:
             containers:
+            - name: "{{ element.name }}"
+              securityContext:
+                allowPrivilegeEscalation: false
+                seccompProfile:
+                  type: RuntimeDefault
+                capabilities:
+                  drop:
+                    - ALL
+      - list: "request.object.spec.initContainers || []"
+        patchStrategicMerge:
+          spec:
+            initContainers:
+            - name: "{{ element.name }}"
+              securityContext:
+                allowPrivilegeEscalation: false
+                seccompProfile:
+                  type: RuntimeDefault
+                capabilities:
+                  drop:
+                    - ALL
+      - list: "request.object.spec.ephemeralContainers || []"
+        patchStrategicMerge:
+          spec:
+            ephemeralContainers:
             - name: "{{ element.name }}"
               securityContext:
                 allowPrivilegeEscalation: false
@@ -90,10 +114,34 @@ spec:
         - argocd
     mutate:
       foreach:
-      - list: "request.object.spec.[containers, initContainers, ephemeralContainers][] | []"
+      - list: "request.object.spec.containers || []"
         patchStrategicMerge:
           spec:
             containers:
+            - name: "{{ element.name }}"
+              resources:
+                requests:
+                  +(memory): "100Mi"
+                  +(cpu): "100m"
+                limits:
+                  +(memory): "512Mi"
+                  +(cpu): "500m"
+      - list: "request.object.spec.initContainers || []"
+        patchStrategicMerge:
+          spec:
+            initContainers:
+            - name: "{{ element.name }}"
+              resources:
+                requests:
+                  +(memory): "100Mi"
+                  +(cpu): "100m"
+                limits:
+                  +(memory): "512Mi"
+                  +(cpu): "500m"
+      - list: "request.object.spec.ephemeralContainers || []"
+        patchStrategicMerge:
+          spec:
+            ephemeralContainers:
             - name: "{{ element.name }}"
               resources:
                 requests:
@@ -126,10 +174,30 @@ spec:
         - argocd
     mutate:
       foreach:
-      - list: "request.object.spec.[containers, initContainers, ephemeralContainers][] | []"
+      - list: "request.object.spec.containers || []"
         patchStrategicMerge:
           spec:
             containers:
+            - name: "{{ element.name }}"
+              securityContext:
+                readOnlyRootFilesystem: true
+              volumeMounts:
+              - name: "emptydir"
+                mountPath: /tmp
+      - list: "request.object.spec.initContainers || []"
+        patchStrategicMerge:
+          spec:
+            initContainers:
+            - name: "{{ element.name }}"
+              securityContext:
+                readOnlyRootFilesystem: true
+              volumeMounts:
+              - name: "emptydir"
+                mountPath: /tmp
+      - list: "request.object.spec.ephemeralContainers || []"
+        patchStrategicMerge:
+          spec:
+            ephemeralContainers:
             - name: "{{ element.name }}"
               securityContext:
                 readOnlyRootFilesystem: true
