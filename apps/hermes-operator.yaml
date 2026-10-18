@@ -55,6 +55,11 @@ spec:
       containers:
       - name: hermes-agent
         image: nousresearch/hermes-agent:v0.22.2
+        command: ["/bin/sh", "-c"]
+        args: 
+          - |
+            hermes dashboard &
+            exec hermes gateway run
         resources:
           requests:
             memory: "4Gi"

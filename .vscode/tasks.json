@@ -49,6 +49,12 @@
       "type": "shell",
       "command": "echo '--- HEADLAMP TOKEN ---' && sudo kubectl --kubeconfig /etc/rancher/k3s/k3s.yaml create token headlamp -n headlamp",      
       "presentation": { "group": "k3s-group", "panel": "new", "focus": true, "reveal": "always" }
+    },
+    {
+      "label": "Hermes UI",
+      "type": "shell",
+      "command": " sudo kubectl --kubeconfig /etc/rancher/k3s/k3s.yaml port-forward -n hermes-agent svc/hermes-agent-svc 8084:9119",      
+      "presentation": { "group": "k3s-group", "panel": "new", "focus": false }
     }
   ]
 }
