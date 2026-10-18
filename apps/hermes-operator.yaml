@@ -1,0 +1,77 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: hermes-agent
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow
+  namespace: hermes-agent
+spec:
+  podSelector: 
+    matchLabels:
+      app: hermes-agent
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+    ports:
+    - protocol: TCP
+      port: 443
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hermes-agent
+  namespace: hermes-agent
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hermes-agent
+  template:
+    metadata:
+      labels:
+        app: hermes-agent
+    spec:
+      containers:
+      - name: hermes-agent
+        image: nousresearch/hermes-agent:v0.22.2
+        command: ["hermes", "gateway", "run"]
+        resources:
+          requests:
+            memory: "4Gi"
+            cpu: "2"
+          limits:
+            cpu: "4"
+            memory: "8Gi"
+          env:
+            - name: HERMES_HOME
+              value: "/hermes-agent-storage"
+            - name: HERMES_DASHBOARD
+              value: "1"
+        envFrom:
+        - secretRef:
+            name: hermes-agent-config
+        volumeMounts:
+        - name: hermes-agent-storage
+          mountPath: /hermes-agent-storage
+      volumes:
+      - name: hermes-agent-storage
+        persistentVolumeClaim:
+          claimName: hermes-agent-storage-pvc
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: hermes-agent-storage-pvc
+  namespace: hermes-agent
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 15Gi
