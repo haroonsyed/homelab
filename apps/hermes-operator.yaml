@@ -3,6 +3,21 @@ kind: Namespace
 metadata:
   name: hermes-agent
 ---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hermes-agent-ui
+  namespace: hermes-agent
+spec:
+  type: ClusterIP
+  selector:
+    app: hermes-agent
+  ports:
+    - name: ui
+      protocol: TCP
+      port: 9119
+      targetPort: 9119
+---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
